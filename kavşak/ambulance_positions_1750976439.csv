@@ -1,0 +1,7 @@
+vehicle_id,step,sumo_x,sumo_y,gps_lat,gps_lon
+ambulance_gps_0,1,58.02,508.4,37.06695,30.20931
+ambulance_gps_0,2,599.22,508.4,37.06695,30.20931
+ambulance_gps_1,3,6.1,508.4,37.06695,30.20931
+ambulance_gps_1,4,581.22,508.4,37.066943,30.209297
+ambulance_gps_2,5,6.1,508.4,37.066938,30.209288
+ambulance_gps_2,6,595.42,508.4,37.066938,30.209278

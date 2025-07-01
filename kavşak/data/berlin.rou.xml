@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/routes_file.xsd">
+    <!-- Vehicle Types for Berlin Network -->
+    <vType id="ambulance" accel="2.0" decel="6.0" sigma="0.1" length="6" minGap="2" maxSpeed="50" 
+           guiShape="emergency" color="1,0,0" emergencyDecel="8.0"/>
+    <vType id="passenger" accel="1.5" decel="4.5" sigma="0.5" length="4.5" minGap="2.5" maxSpeed="35" 
+           guiShape="passenger"/>
+           
+    <!-- GPS-guided ambulances will be added dynamically via TraCI -->
+    <!-- No pre-defined routes needed as vehicles are controlled by moveToXY -->
+</routes>

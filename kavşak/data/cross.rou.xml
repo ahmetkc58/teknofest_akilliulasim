@@ -1,0 +1,11 @@
+<routes>
+        <vType id="typeWE" accel="0.8" decel="4.5" sigma="0.5" length="5" minGap="2.5" maxSpeed="16.67" guiShape="passenger"/>
+        <vType id="typeNS" accel="0.8" decel="4.5" sigma="0.5" length="7" minGap="3" maxSpeed="25" guiShape="emergency"/>
+        <vType id="ambulance" accel="1.0" decel="5.0" sigma="0.1" length="6" minGap="2" maxSpeed="50" guiShape="emergency" color="1,0,0"/>
+
+        <route id="right" edges="51o 1i 2o 52i" />
+        <route id="left" edges="52o 2i 1o 51i" />
+        <route id="down" edges="54o 4i 3o 53i" />
+        <route id="ambulance_route" edges="51o 1i 2o 52i" />
+    <vehicle id="ambulance_gps_0" type="ambulance" route="ambulance_route" depart="10" color="1,0,0" departSpeed="0" departPos="0"/>
+</routes>

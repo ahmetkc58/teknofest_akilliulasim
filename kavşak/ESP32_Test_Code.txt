@@ -1,0 +1,117 @@
+ESP32 WiFi/HTTP GPS Test Kodu
+==============================
+
+Bu kodu ESP32'na yükle ve test et:
+
+```arduino
+#include <WiFi.h>
+#include <WebServer.h>
+
+// WiFi ayarları
+const char* ssid = "WIFI_ADI";      // WiFi ağ adın
+const char* password = "WIFI_SIFRESI"; // WiFi şifren
+
+// LED ve buzzer pinleri
+#define LED_PIN 2      // Trafik ışığı sinyali için LED
+#define BUZZER_PIN 4   // Ambulans geçiş sinyali için buzzer
+
+WebServer server(80);
+
+// Test GPS koordinatları (İstanbul)
+float test_lat = 41.0082;
+float test_lon = 28.9784;
+
+void setup() {
+  Serial.begin(115200);
+  
+  // Pin ayarları
+  pinMode(LED_PIN, OUTPUT);
+  pinMode(BUZZER_PIN, OUTPUT);
+  
+  // WiFi bağlantısı
+  WiFi.begin(ssid, password);
+  Serial.print("WiFi'ye bağlanıyor");
+  
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+  
+  Serial.println();
+  Serial.print("WiFi bağlandı! IP: ");
+  Serial.println(WiFi.localIP());
+  
+  // HTTP endpoint'leri
+  server.on("/gps", handleGPS);
+  server.on("/status", handleStatus);
+  server.on("/led_on", handleLedOn);
+  server.on("/led_off", handleLedOff);
+  server.on("/buzzer", handleBuzzer);
+  
+  server.begin();
+  Serial.println("HTTP server başlatıldı!");
+  Serial.println("Test URL'leri:");
+  Serial.println("http://" + WiFi.localIP().toString() + "/gps");
+  Serial.println("http://" + WiFi.localIP().toString() + "/status");
+}
+
+void loop() {
+  server.handleClient();
+  
+  // GPS koordinatlarını biraz değiştir (test için)
+  test_lat += 0.0001;
+  test_lon += 0.0001;
+  
+  delay(1000);
+}
+
+void handleGPS() {
+  String json = "{";
+  json += "\"latitude\":" + String(test_lat, 6) + ",";
+  json += "\"longitude\":" + String(test_lon, 6) + ",";
+  json += "\"valid\":true,";
+  json += "\"timestamp\":\"2024-01-20T10:30:00Z\"";
+  json += "}";
+  
+  server.send(200, "application/json", json);
+  Serial.println("GPS data sent: " + json);
+}
+
+void handleStatus() {
+  String json = "{";
+  json += "\"device\":\"ESP32_GPS\",";
+  json += "\"ip\":\"" + WiFi.localIP().toString() + "\",";
+  json += "\"status\":\"online\",";
+  json += "\"uptime\":" + String(millis()) + "";
+  json += "}";
+  
+  server.send(200, "application/json", json);
+  Serial.println("Status sent");
+}
+
+void handleLedOn() {
+  digitalWrite(LED_PIN, HIGH);
+  server.send(200, "text/plain", "LED ON");
+  Serial.println("🔴 LED AÇILDI - Trafik ışığı sinyali!");
+}
+
+void handleLedOff() {
+  digitalWrite(LED_PIN, LOW);
+  server.send(200, "text/plain", "LED OFF");
+  Serial.println("⚪ LED KAPANDI - Normal trafik");
+}
+
+void handleBuzzer() {
+  digitalWrite(BUZZER_PIN, HIGH);
+  delay(500);
+  digitalWrite(BUZZER_PIN, LOW);
+  server.send(200, "text/plain", "BUZZER ACTIVATED");
+  Serial.println("🔊 BUZZER - Ambulans geçiş sinyali!");
+}
+```
+
+KULLANIM:
+1. Bu kodu ESP32'na yükle
+2. Serial Monitor'den IP adresini not al
+3. Python kodunda bu IP'yi kullan:
+   python runner.py --gps-source esp32 --esp32-ip [ESP32_IP]
