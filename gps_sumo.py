@@ -19,7 +19,7 @@ import traci
 
 class GPSSUMOEntegrator:
     def __init__(self):
-        self.esp32_ip = "192.168.1.100"  # ESP32'nizin IP adresi
+        self.esp32_ip = os.environ.get("ESP32_IP", "192.168.1.100")  # ESP32'nizin IP adresi (ESP32_IP ortam değişkeniyle değiştirilebilir)
         self.sumo_connected = False
         self.gps_data = {}
         self.traffic_lights = {}
